@@ -1,0 +1,132 @@
+import React, { useState, useEffect } from 'react';
+import { motion } from 'framer-motion';
+import { ArrowRight, ChevronDown } from 'lucide-react';
+import ParticleBackground from './ParticleBackground';
+import { SOCIAL_LINKS } from '../constants';
+
+const Hero: React.FC = () => {
+  const [text, setText] = useState('');
+  const fullText = "Olá, eu sou Fernando Cardoso";
+  const [isTypingDone, setIsTypingDone] = useState(false);
+
+  useEffect(() => {
+    if (text.length < fullText.length) {
+      const timeout = setTimeout(() => {
+        setText(fullText.slice(0, text.length + 1));
+      }, 100);
+      return () => clearTimeout(timeout);
+    } else {
+      setIsTypingDone(true);
+    }
+  }, [text]);
+
+  const scrollToSection = (e: React.MouseEvent<HTMLAnchorElement | HTMLDivElement>, href: string) => {
+    e.preventDefault();
+    const targetId = href.replace('#', '');
+    const element = document.getElementById(targetId);
+    if (element) {
+      const headerOffset = 80;
+      const elementPosition = element.getBoundingClientRect().top;
+      const offsetPosition = elementPosition + window.scrollY - headerOffset;
+
+      window.scrollTo({
+        top: offsetPosition,
+        behavior: 'smooth'
+      });
+    }
+  };
+
+  return (
+    <section id="home" className="relative h-screen w-full flex items-center justify-center overflow-hidden">
+      {/* Background Gradient & Particles */}
+      <div className="absolute inset-0 bg-gradient-to-br from-black via-black to-[#1a052e] z-0"></div>
+      <ParticleBackground />
+
+      {/* Social Sidebar */}
+      <div className="hidden md:flex flex-col absolute left-8 lg:left-12 top-1/2 -translate-y-1/2 gap-6 z-20">
+         {SOCIAL_LINKS.map((link, index) => (
+             <motion.a
+                key={link.platform}
+                href={link.url}
+                target="_blank"
+                rel="noopener noreferrer"
+                initial={{ opacity: 0, x: -20 }}
+                animate={{ opacity: 1, x: 0 }}
+                transition={{ delay: 2 + index * 0.1 }}
+                className={`text-gray-400 hover:scale-110 transition-all duration-300 ${link.color}`}
+            >
+                {link.icon}
+            </motion.a>
+         ))}
+         <motion.div
+            initial={{ height: 0 }}
+            animate={{ height: '60px' }}
+            transition={{ delay: 2.5, duration: 0.5 }}
+            className="w-px bg-gradient-to-b from-transparent via-fc-purple to-transparent mx-auto opacity-50"
+         />
+      </div>
+      
+      {/* Content */}
+      <div className="relative z-10 container mx-auto px-6 text-center">
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8 }}
+        >
+          <div className="inline-block px-4 py-1.5 mb-6 border border-fc-purple/50 rounded-full bg-fc-purple/10 backdrop-blur-sm">
+            <span className="text-sm font-mono text-fc-blue">🚀 Bem-vindo ao meu universo</span>
+          </div>
+
+          <h1 className="text-4xl md:text-6xl lg:text-7xl font-bold text-white mb-6 min-h-[80px] md:min-h-[144px]">
+            {text}
+            <span className="animate-pulse text-fc-purple">|</span>
+          </h1>
+
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: isTypingDone ? 1 : 0 }}
+            transition={{ duration: 1, delay: 0.5 }}
+          >
+            <p className="text-xl md:text-2xl text-gray-300 mb-10 max-w-2xl mx-auto leading-relaxed">
+              Desenvolvedor <span className="text-gradient font-bold">Front-end</span> & Criador de Experiências Digitais. 
+              Transformo ideias complexas em interfaces elegantes.
+            </p>
+
+            <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
+              <a
+                href="#projects"
+                onClick={(e) => scrollToSection(e, '#projects')}
+                className="group relative px-8 py-4 bg-gradient-to-r from-fc-purple to-fc-blue rounded-lg text-white font-bold overflow-hidden transition-all hover:shadow-[0_0_20px_rgba(106,13,173,0.5)] cursor-pointer"
+              >
+                <div className="absolute inset-0 w-full h-full bg-white/20 translate-y-full group-hover:translate-y-0 transition-transform duration-300"></div>
+                <span className="relative flex items-center gap-2">
+                  Ver Projetos <ArrowRight size={20} />
+                </span>
+              </a>
+              
+              <a
+                href="#contact"
+                onClick={(e) => scrollToSection(e, '#contact')}
+                className="px-8 py-4 border border-white/20 rounded-lg text-white hover:bg-white/5 transition-all hover:border-fc-blue cursor-pointer"
+              >
+                Entrar em contato
+              </a>
+            </div>
+          </motion.div>
+        </motion.div>
+      </div>
+
+      {/* Scroll Indicator */}
+      <motion.div 
+        className="absolute bottom-10 left-1/2 -translate-x-1/2 text-white/50 cursor-pointer hover:text-white transition-colors"
+        animate={{ y: [0, 10, 0] }}
+        transition={{ repeat: Infinity, duration: 2 }}
+        onClick={(e) => scrollToSection(e, '#about')}
+      >
+        <ChevronDown size={32} />
+      </motion.div>
+    </section>
+  );
+};
+
+export default Hero;
