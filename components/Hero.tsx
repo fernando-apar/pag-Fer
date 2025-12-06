@@ -94,20 +94,9 @@ const Hero: React.FC = () => {
 
             <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
               <a
-                href="#projects"
-                onClick={(e) => scrollToSection(e, '#projects')}
-                className="group relative px-8 py-4 bg-gradient-to-r from-fc-purple to-fc-blue rounded-lg text-white font-bold overflow-hidden transition-all hover:shadow-[0_0_20px_rgba(106,13,173,0.5)] cursor-pointer"
-              >
-                <div className="absolute inset-0 w-full h-full bg-white/20 translate-y-full group-hover:translate-y-0 transition-transform duration-300"></div>
-                <span className="relative flex items-center gap-2">
-                  Ver Projetos <ArrowRight size={20} />
-                </span>
-              </a>
-              
-              <a
                 href="#contact"
                 onClick={(e) => scrollToSection(e, '#contact')}
-                className="px-8 py-4 border border-white/20 rounded-lg text-white hover:bg-white/5 transition-all hover:border-fc-blue cursor-pointer"
+                className="px-8 py-4 bg-gradient-to-r from-fc-purple to-fc-blue rounded-lg text-white font-bold hover:shadow-[0_0_20px_rgba(106,13,173,0.5)] transition-all cursor-pointer"
               >
                 Entrar em contato
               </a>

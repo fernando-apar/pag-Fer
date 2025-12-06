@@ -21,27 +21,30 @@ export const SKILLS: Skill[] = [
 export const PROJECTS: Project[] = [
   {
     id: 1,
-    title: 'E-Commerce Neon',
-    description: 'Plataforma de vendas completa com dashboard, tema dark e pagamentos integrados via Stripe.',
-    image: 'https://picsum.photos/seed/project1/600/400',
-    tags: ['React', 'Stripe', 'Node.js'],
-    link: '#',
+    title: 'Gestão de Finanças',
+    description: 'Controle completo de gastos e receitas com visualização gráfica intuitiva e moderna.',
+    image: 'https://images.unsplash.com/photo-1579621970563-ebec7560ff3e?q=80&w=2071&auto=format&fit=crop',
+    tags: ['React', 'Finance', 'Dashboard'],
+    link: 'https://fcfinancas.netlify.app/',
+    buttonText: 'App de Finanças Pessoais'
   },
   {
     id: 2,
-    title: 'Dashboard Financeiro',
-    description: 'Aplicação para gestão de finanças pessoais com gráficos interativos usando D3.js e Recharts.',
-    image: 'https://picsum.photos/seed/project2/600/400',
-    tags: ['TypeScript', 'Recharts', 'Firebase'],
-    link: '#',
+    title: 'Oráculo da Sorte',
+    description: 'Transforme probabilidades em prêmios com este gerador de números para loterias.',
+    image: 'https://images.unsplash.com/photo-1596838132731-3301c3fd4317?q=80&w=2070&auto=format&fit=crop',
+    tags: ['React', 'Lógica', 'CSS'],
+    link: 'https://numerodasortemega.netlify.app/',
+    buttonText: 'App Oraculo da Sorte'
   },
   {
     id: 3,
-    title: 'App de Clima Futurista',
-    description: 'Visualização de dados meteorológicos em tempo real com animações complexas e geolocalização.',
-    image: 'https://picsum.photos/seed/project3/600/400',
-    tags: ['Vue.js', 'OpenWeather', 'GSAP'],
-    link: '#',
+    title: 'Borges Climatização',
+    description: 'Soluções profissionais para instalação e manutenção de ar condicionado e climatização.',
+    image: 'https://images.unsplash.com/photo-1621905251189-08b45d6a269e?q=80&w=2069&auto=format&fit=crop',
+    tags: ['Landing Page', 'Serviços', 'Institucional'],
+    link: 'https://borges.netlify.app/',
+    buttonText: 'Instalação de Ar Borges'
   },
 ];
 

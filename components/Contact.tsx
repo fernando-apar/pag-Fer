@@ -1,9 +1,12 @@
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import { motion } from 'framer-motion';
-import { MessageCircle, Send, User, Mail, Phone, MessageSquare, CheckCircle, Loader2 } from 'lucide-react';
+import { Send, User, Mail, Phone, MessageSquare, CheckCircle, Loader2, AlertCircle } from 'lucide-react';
 import { SOCIAL_LINKS } from '../constants';
+import emailjs from '@emailjs/browser';
 
 const Contact: React.FC = () => {
+  const formRef = useRef<HTMLFormElement>(null);
+  
   const [formState, setFormState] = useState({
     name: '',
     email: '',
@@ -11,22 +14,62 @@ const Contact: React.FC = () => {
     message: ''
   });
   
-  const [status, setStatus] = useState<'idle' | 'submitting' | 'success'>('idle');
+  const [status, setStatus] = useState<'idle' | 'submitting' | 'success' | 'error'>('idle');
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     setStatus('submitting');
     
-    // Simulate API call
-    setTimeout(() => {
-      setStatus('success');
-      setFormState({ name: '', email: '', whatsapp: '', message: '' });
-      
-      // Reset status after showing success message
-      setTimeout(() => {
-        setStatus('idle');
-      }, 3000);
-    }, 1500);
+    // ------------------------------------------------------------------
+    // CONFIGURAÇÃO DO EMAILJS (Para envio automático e silencioso)
+    // 1. Crie conta gratuita em https://www.emailjs.com/
+    // 2. Crie um Email Service (ex: Gmail)
+    // 3. Crie um Email Template com as variáveis: {{name}}, {{email}}, {{whatsapp}}, {{message}}
+    // 4. Copie os IDs abaixo e substitua os valores:
+    // ------------------------------------------------------------------
+    const SERVICE_ID = 'YOUR_SERVICE_ID'; 
+    const TEMPLATE_ID = 'YOUR_TEMPLATE_ID'; 
+    const PUBLIC_KEY = 'YOUR_PUBLIC_KEY'; 
+    
+    // Email de destino para o modo Fallback (caso não configure o EmailJS)
+    // Substitua pelo seu email real para testar o modo manual
+    const FALLBACK_EMAIL = 'fernando.aparicio@exemplo.com'; 
+
+    // MODO FALLBACK: Se as chaves ainda forem as padrões, abrimos o cliente de email
+    if (SERVICE_ID === 'YOUR_SERVICE_ID') {
+        console.warn("EmailJS não configurado. Usando modo mailto.");
+        setTimeout(() => {
+            const subject = `Novo Contato do Portfólio: ${formState.name}`;
+            const body = `Nome: ${formState.name}\nEmail: ${formState.email}\nWhatsApp: ${formState.whatsapp}\n\nMensagem:\n${formState.message}`;
+            
+            // Tenta pegar o email das constantes ou usa o definido acima
+            const targetEmail = SOCIAL_LINKS.find(s => s.platform === 'Email')?.url.replace('mailto:', '') || FALLBACK_EMAIL;
+            
+            // Abre o cliente de email padrão
+            window.location.href = `mailto:${targetEmail}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+            
+            setStatus('success');
+            setFormState({ name: '', email: '', whatsapp: '', message: '' });
+            setTimeout(() => setStatus('idle'), 3000);
+        }, 1500);
+        return;
+    }
+
+    // MODO AUTOMÁTICO: Envio via EmailJS
+    if (formRef.current) {
+        emailjs.sendForm(SERVICE_ID, TEMPLATE_ID, formRef.current, {
+            publicKey: PUBLIC_KEY,
+        })
+        .then(() => {
+            setStatus('success');
+            setFormState({ name: '', email: '', whatsapp: '', message: '' });
+            setTimeout(() => setStatus('idle'), 5000);
+        }, (error) => {
+            console.error('FAILED...', error.text);
+            setStatus('error');
+            setTimeout(() => setStatus('idle'), 5000);
+        });
+    }
   };
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
@@ -65,18 +108,6 @@ const Contact: React.FC = () => {
               Tem uma ideia de projeto ou quer elevar o nível da sua presença digital? Preencha o formulário ou me chame nas redes.
             </p>
 
-            <motion.a
-              href="https://wa.me/5511999999999"
-              target="_blank"
-              rel="noopener noreferrer"
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
-              className="inline-flex items-center gap-3 px-8 py-4 bg-[#25D366] text-white font-bold rounded-full shadow-[0_0_20px_rgba(37,211,102,0.4)] hover:shadow-[0_0_30px_rgba(37,211,102,0.6)] transition-all mb-12"
-            >
-              <MessageCircle size={24} />
-              Falar comigo no WhatsApp
-            </motion.a>
-
             <div className="flex gap-6">
               {SOCIAL_LINKS.map((link) => (
                 <a
@@ -101,7 +132,7 @@ const Contact: React.FC = () => {
              transition={{ delay: 0.2 }}
              className="glass-card p-8 rounded-2xl border border-white/10"
           >
-            <form onSubmit={handleSubmit} className="space-y-6">
+            <form ref={formRef} onSubmit={handleSubmit} className="space-y-6">
               <div className="space-y-2">
                 <label className="text-sm font-medium text-gray-300 flex items-center gap-2">
                   <User size={16} className="text-fc-blue" /> Nome
@@ -168,6 +199,8 @@ const Contact: React.FC = () => {
                 className={`w-full py-4 rounded-lg font-bold text-white flex items-center justify-center gap-2 transition-all duration-300 ${
                   status === 'success' 
                     ? 'bg-green-500' 
+                    : status === 'error'
+                    ? 'bg-red-500'
                     : 'bg-gradient-to-r from-fc-purple to-fc-blue hover:shadow-[0_0_20px_rgba(106,13,173,0.5)]'
                 }`}
               >
@@ -177,12 +210,22 @@ const Contact: React.FC = () => {
                   <>
                     <CheckCircle /> Mensagem Enviada!
                   </>
+                ) : status === 'error' ? (
+                  <>
+                     <AlertCircle /> Erro ao Enviar
+                  </>
                 ) : (
                   <>
                     Enviar Mensagem <Send size={20} />
                   </>
                 )}
               </button>
+              
+              {status === 'error' && (
+                  <p className="text-red-400 text-sm text-center mt-2">
+                      Houve um erro ao enviar. Tente novamente ou me chame no WhatsApp.
+                  </p>
+              )}
             </form>
           </motion.div>
         </motion.div>
