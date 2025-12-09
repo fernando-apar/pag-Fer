@@ -1,12 +1,9 @@
-import React, { useState, useRef } from 'react';
+import React, { useState } from 'react';
 import { motion } from 'framer-motion';
 import { Send, User, Mail, Phone, MessageSquare, CheckCircle, Loader2, AlertCircle } from 'lucide-react';
 import { SOCIAL_LINKS } from '../constants';
-import emailjs from '@emailjs/browser';
 
 const Contact: React.FC = () => {
-  const formRef = useRef<HTMLFormElement>(null);
-  
   const [formState, setFormState] = useState({
     name: '',
     email: '',
@@ -16,60 +13,46 @@ const Contact: React.FC = () => {
   
   const [status, setStatus] = useState<'idle' | 'submitting' | 'success' | 'error'>('idle');
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setStatus('submitting');
     
-    // ------------------------------------------------------------------
-    // CONFIGURAÇÃO DO EMAILJS (Para envio automático e silencioso)
-    // 1. Crie conta gratuita em https://www.emailjs.com/
-    // 2. Crie um Email Service (ex: Gmail)
-    // 3. Crie um Email Template com as variáveis: {{name}}, {{email}}, {{whatsapp}}, {{message}}
-    // 4. Copie os IDs abaixo e substitua os valores:
-    // ------------------------------------------------------------------
-    const SERVICE_ID = 'YOUR_SERVICE_ID'; 
-    const TEMPLATE_ID = 'YOUR_TEMPLATE_ID'; 
-    const PUBLIC_KEY = 'YOUR_PUBLIC_KEY'; 
-    
-    // Email de destino para o modo Fallback (caso não configure o EmailJS)
-    // Substitua pelo seu email real para testar o modo manual
-    const FALLBACK_EMAIL = 'fernando.aparicio@exemplo.com'; 
+    // Pega o email configurado em constants.tsx (removendo o 'mailto:')
+    // Certifique-se que o email em constants.tsx é o seu email real para onde as mensagens devem ir.
+    const targetEmail = SOCIAL_LINKS.find(s => s.platform === 'Email')?.url.replace('mailto:', '') || 'seuemail@exemplo.com';
 
-    // MODO FALLBACK: Se as chaves ainda forem as padrões, abrimos o cliente de email
-    if (SERVICE_ID === 'YOUR_SERVICE_ID') {
-        console.warn("EmailJS não configurado. Usando modo mailto.");
-        setTimeout(() => {
-            const subject = `Novo Contato do Portfólio: ${formState.name}`;
-            const body = `Nome: ${formState.name}\nEmail: ${formState.email}\nWhatsApp: ${formState.whatsapp}\n\nMensagem:\n${formState.message}`;
-            
-            // Tenta pegar o email das constantes ou usa o definido acima
-            const targetEmail = SOCIAL_LINKS.find(s => s.platform === 'Email')?.url.replace('mailto:', '') || FALLBACK_EMAIL;
-            
-            // Abre o cliente de email padrão
-            window.location.href = `mailto:${targetEmail}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
-            
-            setStatus('success');
-            setFormState({ name: '', email: '', whatsapp: '', message: '' });
-            setTimeout(() => setStatus('idle'), 3000);
-        }, 1500);
-        return;
-    }
-
-    // MODO AUTOMÁTICO: Envio via EmailJS
-    if (formRef.current) {
-        emailjs.sendForm(SERVICE_ID, TEMPLATE_ID, formRef.current, {
-            publicKey: PUBLIC_KEY,
+    try {
+      // Usando FormSubmit.co para envio sem backend
+      // IMPORTANTE: Na primeira vez que enviar, você receberá um email de confirmação para ativar.
+      const response = await fetch(`https://formsubmit.co/ajax/${targetEmail}`, {
+        method: "POST",
+        headers: { 
+          'Content-Type': 'application/json',
+          'Accept': 'application/json'
+        },
+        body: JSON.stringify({
+          name: formState.name,
+          email: formState.email,
+          whatsapp: formState.whatsapp,
+          message: formState.message,
+          _subject: `Novo Contato do Site de ${formState.name}`,
+          _template: 'table',
+          _captcha: 'false'
         })
-        .then(() => {
-            setStatus('success');
-            setFormState({ name: '', email: '', whatsapp: '', message: '' });
-            setTimeout(() => setStatus('idle'), 5000);
-        }, (error) => {
-            console.error('FAILED...', error.text);
-            setStatus('error');
-            setTimeout(() => setStatus('idle'), 5000);
-        });
+      });
+
+      if (response.ok) {
+        setStatus('success');
+        setFormState({ name: '', email: '', whatsapp: '', message: '' });
+      } else {
+        setStatus('error');
+      }
+    } catch (error) {
+      console.error("Erro ao enviar:", error);
+      setStatus('error');
     }
+
+    setTimeout(() => setStatus('idle'), 5000);
   };
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
@@ -132,7 +115,7 @@ const Contact: React.FC = () => {
              transition={{ delay: 0.2 }}
              className="glass-card p-8 rounded-2xl border border-white/10"
           >
-            <form ref={formRef} onSubmit={handleSubmit} className="space-y-6">
+            <form onSubmit={handleSubmit} className="space-y-6">
               <div className="space-y-2">
                 <label className="text-sm font-medium text-gray-300 flex items-center gap-2">
                   <User size={16} className="text-fc-blue" /> Nome
@@ -223,7 +206,12 @@ const Contact: React.FC = () => {
               
               {status === 'error' && (
                   <p className="text-red-400 text-sm text-center mt-2">
-                      Houve um erro ao enviar. Tente novamente ou me chame no WhatsApp.
+                      Ocorreu um erro. Verifique sua conexão.
+                  </p>
+              )}
+              {status === 'success' && (
+                  <p className="text-green-400 text-sm text-center mt-2">
+                      Verifique seu e-mail (na primeira vez é necessário ativar o envio).
                   </p>
               )}
             </form>

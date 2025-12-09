@@ -57,7 +57,7 @@ export const SOCIAL_LINKS: SocialLink[] = [
   },
   {
     platform: 'Email',
-    url: 'mailto:contato@fccode.com',
+    url: 'mailto:cardoso.apcr@gmail.com',
     icon: <Mail className="w-6 h-6" />,
     color: 'hover:text-white'
   },
