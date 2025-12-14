@@ -46,6 +46,15 @@ export const PROJECTS: Project[] = [
     link: 'https://borges.netlify.app/',
     buttonText: 'Instalação de Ar Borges'
   },
+  {
+    id: 4,
+    title: 'Ovos da Granja do Re',
+    description: 'Site institucional para divulgação e venda de ovos frescos direto da granja, focando em qualidade e procedência.',
+    image: 'https://images.unsplash.com/photo-1548550023-2bdb3c5beed7?q=80&w=2070&auto=format&fit=crop',
+    tags: ['Institucional', 'Vendas', 'Web'],
+    link: 'https://granjadore.netlify.app/',
+    buttonText: 'Visitar Granja'
+  },
 ];
 
 export const SOCIAL_LINKS: SocialLink[] = [
