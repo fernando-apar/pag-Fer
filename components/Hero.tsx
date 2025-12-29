@@ -37,13 +37,13 @@ const Hero: React.FC = () => {
   };
 
   return (
-    <section id="home" className="relative h-screen w-full flex items-center justify-center overflow-hidden">
+    <section id="home" className="relative min-h-screen w-full flex items-center justify-center overflow-hidden py-20 md:py-0">
       {/* Background Gradient & Particles */}
       <div className="absolute inset-0 bg-gradient-to-br from-black via-black to-[#1a052e] z-0"></div>
       <ParticleBackground />
 
-      {/* Social Sidebar */}
-      <div className="hidden md:flex flex-col absolute left-8 lg:left-12 top-1/2 -translate-y-1/2 gap-6 z-20">
+      {/* Social Sidebar - Hidden on mobile, visible from MD up */}
+      <div className="hidden md:flex flex-col absolute left-6 lg:left-12 top-1/2 -translate-y-1/2 gap-6 z-20">
          {SOCIAL_LINKS.map((link, index) => (
              <motion.a
                 key={link.platform}
@@ -67,17 +67,17 @@ const Hero: React.FC = () => {
       </div>
       
       {/* Content */}
-      <div className="relative z-10 container mx-auto px-6 text-center">
+      <div className="relative z-10 container mx-auto px-4 sm:px-6 text-center">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8 }}
         >
           <div className="inline-block px-4 py-1.5 mb-6 border border-fc-purple/50 rounded-full bg-fc-purple/10 backdrop-blur-sm">
-            <span className="text-sm font-mono text-fc-blue">🚀 Bem-vindo ao meu universo</span>
+            <span className="text-xs md:text-sm font-mono text-fc-blue">🚀 Bem-vindo ao meu universo</span>
           </div>
 
-          <h1 className="text-4xl md:text-6xl lg:text-7xl font-bold text-white mb-6 min-h-[80px] md:min-h-[144px]">
+          <h1 className="text-3xl sm:text-5xl md:text-6xl lg:text-7xl font-bold text-white mb-6 min-h-[120px] sm:min-h-[144px] leading-[1.1]">
             {text}
             <span className="animate-pulse text-fc-purple">|</span>
           </h1>
@@ -87,7 +87,7 @@ const Hero: React.FC = () => {
             animate={{ opacity: isTypingDone ? 1 : 0 }}
             transition={{ duration: 1, delay: 0.5 }}
           >
-            <p className="text-xl md:text-2xl text-gray-300 mb-10 max-w-2xl mx-auto leading-relaxed">
+            <p className="text-base sm:text-lg md:text-xl lg:text-2xl text-gray-300 mb-10 max-w-2xl mx-auto leading-relaxed px-4">
               Desenvolvedor <span className="text-gradient font-bold">Front-end</span> & Criador de Experiências Digitais. 
               Transformo ideias complexas em interfaces elegantes.
             </p>
@@ -96,9 +96,16 @@ const Hero: React.FC = () => {
               <a
                 href="#contact"
                 onClick={(e) => scrollToSection(e, '#contact')}
-                className="px-8 py-4 bg-gradient-to-r from-fc-purple to-fc-blue rounded-lg text-white font-bold hover:shadow-[0_0_20px_rgba(106,13,173,0.5)] transition-all cursor-pointer"
+                className="w-full sm:w-auto px-8 py-4 bg-gradient-to-r from-fc-purple to-fc-blue rounded-lg text-white font-bold hover:shadow-[0_0_20px_rgba(106,13,173,0.5)] transition-all cursor-pointer text-center"
               >
                 Entrar em contato
+              </a>
+              <a
+                href="#projects"
+                onClick={(e) => scrollToSection(e, '#projects')}
+                className="w-full sm:w-auto px-8 py-4 bg-white/5 border border-white/10 rounded-lg text-white font-bold hover:bg-white/10 transition-all cursor-pointer text-center"
+              >
+                Ver Projetos
               </a>
             </div>
           </motion.div>
@@ -107,7 +114,7 @@ const Hero: React.FC = () => {
 
       {/* Scroll Indicator */}
       <motion.div 
-        className="absolute bottom-10 left-1/2 -translate-x-1/2 text-white/50 cursor-pointer hover:text-white transition-colors"
+        className="absolute bottom-6 md:bottom-10 left-1/2 -translate-x-1/2 text-white/50 cursor-pointer hover:text-white transition-colors"
         animate={{ y: [0, 10, 0] }}
         transition={{ repeat: Infinity, duration: 2 }}
         onClick={(e) => scrollToSection(e, '#about')}

@@ -1,6 +1,6 @@
 import React from 'react';
 import { Project, NavItem, SocialLink, Skill } from './types';
-import { Github, Linkedin, Mail, Phone, Code2, Database, Layout, Smartphone, Instagram } from 'lucide-react';
+import { Github, Mail, Code2, Database, Layout } from 'lucide-react';
 
 export const NAV_ITEMS: NavItem[] = [
   { label: 'Home', href: '#home' },
@@ -66,14 +66,8 @@ export const SOCIAL_LINKS: SocialLink[] = [
   },
   {
     platform: 'Email',
-    url: 'mailto:cardoso.apcr@gmail.com',
+    url: 'mailto:fcstore1988@gmail.com',
     icon: <Mail className="w-6 h-6" />,
     color: 'hover:text-white'
-  },
-  {
-    platform: 'Instagram',
-    url: 'https://instagram.com',
-    icon: <Instagram className="w-6 h-6" />,
-    color: 'hover:text-pink-500'
   },
 ];
