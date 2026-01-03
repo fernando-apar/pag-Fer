@@ -54,7 +54,7 @@ const Services: React.FC = () => {
               <p className="text-gray-400 text-xs mt-2 uppercase tracking-widest font-mono">Pagamento único</p>
             </div>
 
-            <ul className="space-y-4 mb-10 flex-grow">
+            <ul className="space-y-4 flex-grow">
               <li className="flex items-center gap-3 text-gray-300 text-sm md:text-base">
                 <div className="shrink-0 w-5 h-5 rounded-full bg-green-500/20 flex items-center justify-center"><Check size={12} className="text-green-400" /></div> Design Responsivo
               </li>
@@ -68,15 +68,6 @@ const Services: React.FC = () => {
                 <X size={18} /> Sem suporte contínuo
               </li>
             </ul>
-
-            <a 
-              href={whatsappLink}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="w-full py-4 rounded-2xl font-bold text-white flex items-center justify-center gap-3 bg-white/5 hover:bg-fc-blue hover:shadow-[0_0_30px_rgba(59,130,246,0.4)] transition-all duration-300"
-            >
-              <MessageCircle size={22} /> Orçamento Rápido
-            </a>
           </motion.div>
 
           {/* Card: Sistema Completo */}
@@ -107,7 +98,7 @@ const Services: React.FC = () => {
               <p className="text-gray-400 text-xs mt-2 uppercase tracking-widest font-mono">Investimento único</p>
             </div>
 
-            <ul className="space-y-4 mb-10 relative z-10 flex-grow">
+            <ul className="space-y-4 relative z-10 flex-grow">
               <li className="flex items-center gap-3 text-gray-300 text-sm md:text-base">
                 <div className="shrink-0 w-5 h-5 rounded-full bg-fc-purple/30 flex items-center justify-center"><Check size={12} className="text-fc-purple" /></div> Banco de Dados Integrado
               </li>
@@ -121,15 +112,6 @@ const Services: React.FC = () => {
                 <div className="shrink-0 w-5 h-5 rounded-full bg-fc-purple/30 flex items-center justify-center"><Check size={12} className="text-fc-purple" /></div> Login & Autenticação
               </li>
             </ul>
-
-            <a 
-              href={whatsappLink}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="w-full py-4 rounded-2xl font-bold text-white flex items-center justify-center gap-3 bg-gradient-to-r from-fc-purple to-fc-indigo hover:shadow-[0_0_40px_rgba(106,13,173,0.5)] transition-all duration-300 relative z-10"
-            >
-              <MessageCircle size={22} /> Consultar Agora
-            </a>
           </motion.div>
         </div>
 
